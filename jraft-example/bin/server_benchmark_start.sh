@@ -9,8 +9,10 @@ JAVA="$JAVA_HOME/bin/java"
 JAVA_VERSION=$($JAVA -version 2>&1 | awk -F\" '/java version/{print $2}')
 echo "java version:$JAVA_VERSION path:$JAVA"
 
-MEMORY=$(cat /proc/meminfo |grep 'MemTotal' |awk -F : '{print $2}' |awk '{print $1}' |sed 's/^[ \t]*//g')
-echo -e "Total Memory:\n${MEMORY} KB\n"
+#MEMORY=$(cat /proc/meminfo |grep 'MemTotal' |awk -F : '{print $2}' |awk '{print $1}' |sed 's/^[ \t]*//g')
+#echo -e "Total Memory:\n${MEMORY} KB\n"
+
+MEMORY=16000000
 
 if [[ $JAVA_VERSION =~ "1.8" ]]; then
   echo "Use java version 1.8 opt"
