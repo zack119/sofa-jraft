@@ -118,6 +118,7 @@ public class AtomicServer {
 
     //for test
     public static void main(String[] arsg) throws Exception {
-        start("config/server.properties");
+//        start("config/server.properties");
+        start("/Users/liubin/git/java/sofa/sofa-jraft/jraft-test/config/server.properties");
     }
 }

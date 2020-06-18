@@ -582,6 +582,7 @@ public class NodeImpl implements Node, RaftServerService {
         Utils.runInThread(() -> doSnapshot(null));
     }
 
+    //  触发选举
     private void handleElectionTimeout() {
         boolean doUnlock = true;
         this.writeLock.lock();
@@ -1683,7 +1684,12 @@ public class NodeImpl implements Node, RaftServerService {
         return monotonicNowMs - this.lastLeaderTimestamp < this.options.getLeaderLeaseTimeoutMs();
     }
 
+    // 当前减去心跳 < 选举超时时间 --> 原有leader继续为leader 当前follower不会发起prevote
     private boolean isCurrentLeaderValid() {
+//        LOG.info("Utils.monotonicMs() : {}", Utils.monotonicMs());
+//        LOG.info("this.lastLeaderTimestamp: {}",  this.lastLeaderTimestamp);
+//        LOG.info("Utils.monotonicMs() - this.lastLeaderTimestamp : {}", (Utils.monotonicMs() - this.lastLeaderTimestamp));
+//        LOG.info("this.options.getElectionTimeoutMs(): {}", this.options.getElectionTimeoutMs());
         return Utils.monotonicMs() - this.lastLeaderTimestamp < this.options.getElectionTimeoutMs();
     }
 
@@ -1697,6 +1703,11 @@ public class NodeImpl implements Node, RaftServerService {
         }
     }
 
+    /**
+     * 处理选举请求
+     * @param request   data of the vote
+     * @return
+     */
     @Override
     public Message handleRequestVoteRequest(final RequestVoteRequest request) {
         boolean doUnlock = true;
@@ -2605,6 +2616,7 @@ public class NodeImpl implements Node, RaftServerService {
                 this.rpcService.preVote(peer.getEndpoint(), done.request, done);
             }
             this.prevVoteCtx.grant(this.serverId);
+            // 当preVoteRequest数量达到quorum数量后，发起electSelf流程
             if (this.prevVoteCtx.isGranted()) {
                 doUnlock = false;
                 electSelf();

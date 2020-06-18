@@ -16,20 +16,26 @@
  */
 package com.alipay.sofa.jraft.example.counter;
 
-import java.util.concurrent.CountDownLatch;
-import java.util.concurrent.Executor;
-
 import com.alipay.sofa.jraft.RouteTable;
 import com.alipay.sofa.jraft.conf.Configuration;
 import com.alipay.sofa.jraft.entity.PeerId;
 import com.alipay.sofa.jraft.error.RemotingException;
+import com.alipay.sofa.jraft.example.counter.rpc.GetValueRequest;
 import com.alipay.sofa.jraft.example.counter.rpc.IncrementAndGetRequest;
 import com.alipay.sofa.jraft.option.CliOptions;
 import com.alipay.sofa.jraft.rpc.InvokeCallback;
 import com.alipay.sofa.jraft.rpc.impl.cli.CliClientServiceImpl;
 
+import java.util.concurrent.CountDownLatch;
+import java.util.concurrent.Executor;
+
 public class CounterClient {
 
+    /**
+     * 启动参数 counter 127.0.0.1:8081,127.0.0.1:8082,127.0.0.1:8083
+     * @param args
+     * @throws Exception
+     */
     public static void main(final String[] args) throws Exception {
         if (args.length != 2) {
             System.out.println("Useage : java com.alipay.sofa.jraft.example.counter.CounterClient {groupId} {conf}");
@@ -64,6 +70,9 @@ public class CounterClient {
         }
         latch.await();
         System.out.println(n + " ops, cost : " + (System.currentTimeMillis() - start) + " ms.");
+
+        getValue(cliClientService, leader);
+
         System.exit(0);
     }
 
@@ -91,5 +100,12 @@ public class CounterClient {
             }
         }, 5000);
     }
+
+    private static void getValue(final CliClientServiceImpl cliClientService, final PeerId leader) throws RemotingException, InterruptedException {
+        final GetValueRequest request = new GetValueRequest();
+        Object o = cliClientService.getRpcClient().invokeSync(leader.getEndpoint(), request, 5000);
+        System.out.println("Value result: " + o.toString());
+    }
+
 
 }

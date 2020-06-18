@@ -109,6 +109,7 @@ public interface Node extends Lifecycle<NodeOptions>, Describer {
     void apply(final Task task);
 
     /**
+     * 线性一致读
      * [Thread-safe and wait-free]
      *
      * Starts a linearizable read-only query request with request context(optional,

@@ -100,6 +100,17 @@ public class CounterServer {
         return response;
     }
 
+    /**
+     * 启动参数
+     *
+     * /tmp/server1 counter 127.0.0.1:8081 127.0.0.1:8081,127.0.0.1:8082,127.0.0.1:8083
+     * /tmp/server2 counter 127.0.0.1:8082 127.0.0.1:8081,127.0.0.1:8082,127.0.0.1:8083
+     * /tmp/server3 counter 127.0.0.1:8083 127.0.0.1:8081,127.0.0.1:8082,127.0.0.1:8083
+     *
+     *
+     * @param args
+     * @throws IOException
+     */
     public static void main(final String[] args) throws IOException {
         if (args.length != 4) {
             System.out

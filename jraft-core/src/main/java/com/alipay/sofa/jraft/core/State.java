@@ -23,10 +23,10 @@ package com.alipay.sofa.jraft.core;
  * 2018-Apr-08 5:41:54 PM
  */
 public enum State {
-    STATE_LEADER, // It's a leader
+    STATE_LEADER, // It's a leader 领导者
     STATE_TRANSFERRING, // It's transferring leadership
-    STATE_CANDIDATE, //  It's a candidate
-    STATE_FOLLOWER, // It's a follower
+    STATE_CANDIDATE, //  It's a candidate 候选人
+    STATE_FOLLOWER, // It's a follower 跟随者
     STATE_ERROR, // It's in error
     STATE_UNINITIALIZED, // It's uninitialized
     STATE_SHUTTING, // It's shutting down
